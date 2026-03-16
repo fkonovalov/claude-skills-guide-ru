@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Полное руководство по созданию Skills для Claude</title>
+    <meta name="description" content="Перевод на русский язык официального руководства Anthropic по созданию Skills для Claude. 33 страницы практических паттернов, примеров и лучших практик.">
+    <meta property="og:title" content="Полное руководство по созданию Skills для Claude">
+    <meta property="og:description" content="Русский перевод официального гайда Anthropic по Skills для Claude AI">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://theurgi.github.io/claude-skills-guide-ru/">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Anthropic_logo.svg/1200px-Anthropic_logo.svg.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Полное руководство по созданию Skills для Claude">
+    <meta name="twitter:description" content="Русский перевод официального гайда Anthropic по Skills для Claude AI">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&subset=cyrillic,latin&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='248' height='248' viewBox='0 0 248 248' fill='none'><path d='M52.4285 162.873L98.7844 136.879L99.5485 134.602L98.7844 133.334H96.4921L88.7237 132.862L62.2346 132.153L39.3113 131.207L17.0249 130.026L11.4214 128.844L6.2 121.873L6.7094 118.447L11.4214 115.257L18.171 115.847L33.0711 116.911L55.485 118.447L71.6586 119.392L95.728 121.873H99.5485L100.058 120.337L98.7844 119.392L97.7656 118.447L74.5877 102.732L49.4995 86.1905L36.3823 76.62L29.3779 71.7757L25.8121 67.2858L24.2839 57.3608L30.6515 50.2716L39.3113 50.8623L41.4763 51.4531L50.2636 58.1879L68.9842 72.7209L93.4357 90.6804L97.0015 93.6343L98.4374 92.6652L98.6571 91.9801L97.0015 89.2625L83.757 65.2772L69.621 40.8192L63.2534 30.6579L61.5978 24.632C60.9565 22.1032 60.579 20.0111 60.579 17.4246L67.8381 7.49965L71.9133 6.19995L81.7193 7.49965L85.7946 11.0443L91.9074 24.9865L101.714 46.8451L116.996 76.62L121.453 85.4816L123.873 93.6343L124.764 96.1155H126.292V94.6976L127.566 77.9197L129.858 57.3608L132.15 30.8942L132.915 23.4505L136.608 14.4708L143.994 9.62643L149.725 12.344L154.437 19.0788L153.8 23.4505L150.998 41.6463L145.522 70.1215L141.957 89.2625H143.994L146.414 86.7813L156.093 74.0206L172.266 53.698L179.398 45.6635L187.803 36.802L193.152 32.5484H203.34L210.726 43.6549L207.415 55.1159L196.972 68.3492L188.312 79.5739L175.896 96.2095L168.191 109.585L168.882 110.689L170.738 110.53L198.755 104.504L213.91 101.787L231.994 98.7149L240.144 102.496L241.036 106.395L237.852 114.311L218.495 119.037L195.826 123.645L162.07 131.592L161.696 131.893L162.137 132.547L177.36 133.925L183.855 134.279H199.774L229.447 136.524L237.215 141.605L241.8 147.867L241.036 152.711L229.065 158.737L213.019 154.956L175.45 145.977L162.587 142.787H160.805V143.85L171.502 154.366L191.242 172.089L215.82 195.011L217.094 200.682L213.91 205.172L210.599 204.699L188.949 188.394L180.544 181.069L161.696 165.118H160.422V166.772L164.752 173.152L187.803 207.771L188.949 218.405L187.294 221.832L181.308 223.959L174.813 222.777L161.187 203.754L147.305 182.486L136.098 163.345L134.745 164.2L128.075 235.42L125.019 239.082L117.887 241.8L111.902 237.31L108.718 229.984L111.902 215.452L115.722 196.547L118.779 181.541L121.58 162.873L123.291 156.636L123.14 156.219L121.773 156.449L107.699 175.752L86.304 204.699L69.3663 222.777L65.291 224.431L58.2867 220.768L58.9235 214.27L62.8713 208.48L86.304 178.705L100.44 160.155L109.551 149.507L109.462 147.967L108.959 147.924L46.6977 188.512L35.6182 189.93L30.7788 185.44L31.4156 178.115L33.7079 175.752L52.4285 162.873Z' fill='%23D97757'/></svg>">
+    <style>
+        :root {
+            --color-bg: #fafaf9;
+            --color-surface: #ffffff;
+            --color-text: #1c1917;
+            --color-text-secondary: #57534e;
+            --color-text-muted: #a8a29e;
+            --color-border: #e7e5e4;
+            --color-border-light: #f5f5f4;
+            --color-accent: #dc6b40;
+            --color-accent-light: #fff7ed;
+            --color-accent-dark: #c2532a;
+            --color-code-bg: #1e1e2e;
+            --color-code-text: #cdd6f4;
+            --color-success: #16a34a;
+            --color-error: #dc2626;
+            --color-info: #2563eb;
+            --color-chapter: #dc6b40;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --max-width: 780px;
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #0c0a09;
+            --color-surface: #1c1917;
+            --color-text: #fafaf9;
+            --color-text-secondary: #a8a29e;
+            --color-text-muted: #78716c;
+            --color-border: #292524;
+            --color-border-light: #1c1917;
+            --color-accent: #f59e6b;
+            --color-accent-light: #1c1208;
+            --color-accent-dark: #fb923c;
+            --color-code-bg: #0f0f1a;
+            --color-code-text: #cdd6f4;
+            --color-success: #22c55e;
+            --color-error: #f87171;
+            --color-info: #60a5fa;
+            --color-chapter: #f59e6b;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 16.5px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== Header ===== */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--color-bg);
+            border-bottom: 1px solid var(--color-border);
+            backdrop-filter: blur(12px);
+            background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--color-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-logo svg {
+            color: var(--color-accent);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle, .toc-toggle {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 8px 10px;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            font-size: 16px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-toggle:hover, .toc-toggle:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .toc-toggle {
+            display: none;
+        }
+
+        /* ===== Layout ===== */
+        .layout {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 64px;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+            padding: 32px 24px 32px 24px;
+            border-right: 1px solid var(--color-border);
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-border) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 4px;
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: 16px;
+        }
+
+        .sidebar nav a {
+            display: block;
+            padding: 6px 12px;
+            margin: 1px 0;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 450;
+            border-radius: 6px;
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+
+        .sidebar nav a:hover {
+            color: var(--color-text);
+            background: var(--color-border-light);
+        }
+
+        .sidebar nav a.active {
+            color: var(--color-accent);
+            background: var(--color-accent-light);
+            font-weight: 550;
+        }
+
+        .sidebar nav a.chapter-link {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        .sidebar nav a.sub-link {
+            padding-left: 24px;
+            font-size: 13px;
+        }
+
+        /* ===== Main ===== */
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 48px 64px 120px;
+            max-width: var(--max-width);
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            margin-bottom: 48px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--color-accent-light);
+            color: var(--color-accent);
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+        }
+
+        .hero h1 {
+            font-family: 'Lora', Georgia, serif;
+            font-size: clamp(32px, 5vw, 44px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--color-text) 0%, var(--color-text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        .hero-meta {
+            margin-top: 24px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-meta-item strong {
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+
+        /* ===== Chapter headers ===== */
+        .chapter-header {
+            margin-top: 80px;
+            margin-bottom: 36px;
+            padding: 36px 0 20px;
+            border-top: 3px solid var(--color-chapter);
+        }
+
+        .chapter-number {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--color-chapter);
+            margin-bottom: 10px;
+        }
+
+        .chapter-header h2 {
+            font-family: 'Lora', Georgia, serif;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+        }
+
+        /* ===== Sections ===== */
+        section {
+            margin-bottom: 8px;
+        }
+
+        /* ===== Headings ===== */
+        h3 {
+            font-family: 'Lora', Georgia, serif;
+            font-size: 21px;
+            font-weight: 700;
+            margin-top: 44px;
+            margin-bottom: 14px;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        h4 {
+            font-size: 16px;
+            font-weight: 650;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        /* First child heading in a section needs no top margin */
+        section > h3:first-child,
+        .pattern-card > h4:first-child {
+            margin-top: 0;
+        }
+
+        /* ===== Paragraphs & lists ===== */
+        p {
+            margin-bottom: 12px;
+            color: var(--color-text-secondary);
+        }
+
+        /* Tighter spacing: heading -> paragraph */
+        h3 + p, h4 + p {
+            margin-top: 0;
+        }
+
+        /* Tighter spacing: paragraph -> list */
+        p + ul, p + ol {
+            margin-top: -4px;
+        }
+
+        ul, ol {
+            margin-bottom: 14px;
+            padding-left: 22px;
+            color: var(--color-text-secondary);
+        }
+
+        li {
+            margin-bottom: 4px;
+            line-height: 1.6;
+        }
+
+        li::marker {
+            color: var(--color-accent);
+        }
+
+        /* Spacing before blocks after text */
+        p + pre, p + .comparison, p + .card, p + .info-box, p + table {
+            margin-top: 4px;
+        }
+
+        strong {
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* ===== Links ===== */
+        .main a,
+        .main a:visited,
+        .main a:link {
+            color: var(--color-accent) !important;
+            text-decoration: none !important;
+            font-weight: 500;
+            border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+            transition: border-color 0.15s;
+        }
+
+        .main a:hover {
+            border-bottom-color: var(--color-accent);
+        }
+
+        .main a code {
+            color: var(--color-accent);
+            border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+        }
+
+        /* ===== Code ===== */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            background: var(--color-border-light);
+            padding: 2px 7px;
+            border-radius: 5px;
+            border: 1px solid var(--color-border);
+            color: var(--color-accent-dark);
+        }
+
+        pre {
+            background: var(--color-code-bg);
+            color: var(--color-code-text);
+            padding: 18px 22px;
+            border-radius: var(--radius);
+            overflow-x: auto;
+            margin-bottom: 16px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        .code-label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            margin-bottom: 8px;
+        }
+
+        /* ===== Cards ===== */
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-accent {
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .card h4 {
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+
+        .card p:last-child,
+        .card ul:last-child,
+        .card ol:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== Comparison ===== */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .comparison .card {
+            border-left: none;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 0;
+            margin-bottom: 0;
+            overflow: hidden;
+            box-shadow: none;
+        }
+
+        .comparison .good {
+            border-color: var(--color-success);
+        }
+
+        .comparison .bad {
+            border-color: var(--color-error);
+        }
+
+        .comparison-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            padding: 8px 16px;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        .good .comparison-label {
+            background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
+            color: var(--color-success);
+        }
+
+        .bad .comparison-label {
+            background: color-mix(in srgb, var(--color-error) 10%, var(--color-surface));
+            color: var(--color-error);
+        }
+
+        .comparison .card > *:not(.comparison-label) {
+            padding-left: 24px;
+            padding-right: 16px;
+            padding-top: 14px;
+        }
+
+        .comparison .card > *:last-child {
+            padding-bottom: 14px;
+        }
+
+        .comparison .card > pre {
+            margin: 0;
+            border-radius: 0;
+            border: none;
+        }
+
+        .comparison .card > pre:last-child {
+            padding-bottom: 18px;
+        }
+
+        .comparison .card ul {
+            margin-bottom: 0;
+            font-size: 14.5px;
+        }
+
+        .comparison .card li {
+            margin-bottom: 2px;
+        }
+
+        .comparison.stacked {
+            grid-template-columns: 1fr;
+        }
+
+        /* ===== Info boxes ===== */
+        .info-box {
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            margin-top: 16px;
+            margin-bottom: 20px;
+            font-size: 14.5px;
+            line-height: 1.6;
+        }
+
+        .info-box.tip {
+            background: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg));
+            border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+            color: var(--color-text-secondary);
+        }
+
+        .info-box.tip::before {
+            content: "💡 ";
+        }
+
+        .info-box.note {
+            background: color-mix(in srgb, var(--color-info) 8%, var(--color-bg));
+            border: 1px solid color-mix(in srgb, var(--color-info) 25%, transparent);
+            color: var(--color-text-secondary);
+        }
+
+        /* ===== Table ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            font-weight: 650;
+            color: var(--color-text);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: var(--color-border-light);
+        }
+
+        td {
+            color: var(--color-text-secondary);
+        }
+
+        /* ===== Checklist ===== */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 4px 0 4px 28px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .checklist li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 15px;
+            height: 15px;
+            border: 2px solid var(--color-border);
+            border-radius: 4px;
+        }
+
+        /* ===== File tree ===== */
+        .file-tree {
+            background: var(--color-code-bg);
+            color: var(--color-code-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            padding: 18px 22px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            line-height: 1.75;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .file-tree .folder { color: #89b4fa; }
+        .file-tree .file { color: #a6e3a1; }
+        .file-tree .comment { color: #6c7086; }
+
+        /* ===== Pattern cards ===== */
+        .pattern-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pattern-card h4 {
+            margin-top: 0;
+            font-size: 19px;
+            margin-bottom: 10px;
+        }
+
+        .pattern-card p:last-child,
+        .pattern-card ul:last-child {
+            margin-bottom: 0;
+        }
+
+        .pattern-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--color-accent);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 8px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* ===== Back to top ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 44px;
+            height: 44px;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== Footer ===== */
+        .site-footer {
+            border-top: 1px solid var(--color-border);
+            padding: 40px 24px;
+            text-align: center;
+            font-size: 13.5px;
+            color: var(--color-text-muted);
+        }
+
+        .site-footer a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 960px) {
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 64px;
+                left: 0;
+                bottom: 0;
+                width: 300px;
+                z-index: 90;
+                background: var(--color-bg);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .sidebar.open {
+                display: block;
+            }
+
+            .toc-toggle {
+                display: flex;
+            }
+
+            .main {
+                padding: 32px 24px 100px;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+            body {
+                font-size: 15.5px;
+            }
+
+            .main {
+                padding: 24px 16px 80px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            pre {
+                font-size: 12.5px;
+                padding: 16px;
+            }
+        }
+
+        /* ===== Overlay ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 89;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a href="#" class="header-logo"><svg width="20" height="20" viewBox="0 0 248 248" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path d="M52.4285 162.873L98.7844 136.879L99.5485 134.602L98.7844 133.334H96.4921L88.7237 132.862L62.2346 132.153L39.3113 131.207L17.0249 130.026L11.4214 128.844L6.2 121.873L6.7094 118.447L11.4214 115.257L18.171 115.847L33.0711 116.911L55.485 118.447L71.6586 119.392L95.728 121.873H99.5485L100.058 120.337L98.7844 119.392L97.7656 118.447L74.5877 102.732L49.4995 86.1905L36.3823 76.62L29.3779 71.7757L25.8121 67.2858L24.2839 57.3608L30.6515 50.2716L39.3113 50.8623L41.4763 51.4531L50.2636 58.1879L68.9842 72.7209L93.4357 90.6804L97.0015 93.6343L98.4374 92.6652L98.6571 91.9801L97.0015 89.2625L83.757 65.2772L69.621 40.8192L63.2534 30.6579L61.5978 24.632C60.9565 22.1032 60.579 20.0111 60.579 17.4246L67.8381 7.49965L71.9133 6.19995L81.7193 7.49965L85.7946 11.0443L91.9074 24.9865L101.714 46.8451L116.996 76.62L121.453 85.4816L123.873 93.6343L124.764 96.1155H126.292V94.6976L127.566 77.9197L129.858 57.3608L132.15 30.8942L132.915 23.4505L136.608 14.4708L143.994 9.62643L149.725 12.344L154.437 19.0788L153.8 23.4505L150.998 41.6463L145.522 70.1215L141.957 89.2625H143.994L146.414 86.7813L156.093 74.0206L172.266 53.698L179.398 45.6635L187.803 36.802L193.152 32.5484H203.34L210.726 43.6549L207.415 55.1159L196.972 68.3492L188.312 79.5739L175.896 96.2095L168.191 109.585L168.882 110.689L170.738 110.53L198.755 104.504L213.91 101.787L231.994 98.7149L240.144 102.496L241.036 106.395L237.852 114.311L218.495 119.037L195.826 123.645L162.07 131.592L161.696 131.893L162.137 132.547L177.36 133.925L183.855 134.279H199.774L229.447 136.524L237.215 141.605L241.8 147.867L241.036 152.711L229.065 158.737L213.019 154.956L175.45 145.977L162.587 142.787H160.805V143.85L171.502 154.366L191.242 172.089L215.82 195.011L217.094 200.682L213.91 205.172L210.599 204.699L188.949 188.394L180.544 181.069L161.696 165.118H160.422V166.772L164.752 173.152L187.803 207.771L188.949 218.405L187.294 221.832L181.308 223.959L174.813 222.777L161.187 203.754L147.305 182.486L136.098 163.345L134.745 164.2L128.075 235.42L125.019 239.082L117.887 241.8L111.902 237.31L108.718 229.984L111.902 215.452L115.722 196.547L118.779 181.541L121.58 162.873L123.291 156.636L123.14 156.219L121.773 156.449L107.699 175.752L86.304 204.699L69.3663 222.777L65.291 224.431L58.2867 220.768L58.9235 214.27L62.8713 208.48L86.304 178.705L100.44 160.155L109.551 149.507L109.462 147.967L108.959 147.924L46.6977 188.512L35.6182 189.93L30.7788 185.44L31.4156 178.115L33.7079 175.752L52.4285 162.873Z" fill="currentColor"/></svg> Claude Skills Guide <span style="font-weight: 400; color: var(--color-text-muted); font-size: 13px;">/ RU</span></a>
+        <div class="header-actions">
+            <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener" style="text-decoration: none; font-size: 13px; color: var(--color-text-secondary); padding: 8px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); display: flex; align-items: center; gap: 6px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--color-accent)'" onmouseout="this.style.borderColor='var(--color-border)'">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+            </a>
+            <button class="toc-toggle" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
+        </div>
+    </div>
+</header>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-title">Содержание</div>
+        <nav>
+            <a href="#intro">Введение</a>
+            <a href="#ch1" class="chapter-link">1. Основы</a>
+            <a href="#what-is-skill" class="sub-link">Что такое skill?</a>
+            <a href="#design-principles" class="sub-link">Принципы дизайна</a>
+            <a href="#skills-mcp" class="sub-link">Skills + MCP</a>
+            <a href="#ch2" class="chapter-link">2. Планирование</a>
+            <a href="#use-cases" class="sub-link">Начните с use cases</a>
+            <a href="#categories" class="sub-link">Категории skills</a>
+            <a href="#success-criteria" class="sub-link">Критерии успеха</a>
+            <a href="#tech-requirements" class="sub-link">Технические требования</a>
+            <a href="#writing-skills" class="sub-link">Написание skills</a>
+            <a href="#ch3" class="chapter-link">3. Тестирование</a>
+            <a href="#testing-approach" class="sub-link">Подход к тестированию</a>
+            <a href="#skill-creator" class="sub-link">Skill-creator</a>
+            <a href="#iteration" class="sub-link">Итерации</a>
+            <a href="#ch4" class="chapter-link">4. Дистрибуция</a>
+            <a href="#distribution-model" class="sub-link">Модель распространения</a>
+            <a href="#skills-api" class="sub-link">Skills через API</a>
+            <a href="#positioning" class="sub-link">Позиционирование</a>
+            <a href="#ch5" class="chapter-link">5. Паттерны</a>
+            <a href="#pattern1" class="sub-link">Последовательный workflow</a>
+            <a href="#pattern2" class="sub-link">Multi-MCP координация</a>
+            <a href="#pattern3" class="sub-link">Итеративное улучшение</a>
+            <a href="#pattern4" class="sub-link">Контекстный выбор</a>
+            <a href="#pattern5" class="sub-link">Доменная экспертиза</a>
+            <a href="#troubleshooting" class="sub-link">Troubleshooting</a>
+            <a href="#ch6" class="chapter-link">6. Ресурсы</a>
+            <a href="#checklist" class="chapter-link">Чеклист</a>
+            <a href="#yaml-ref" class="chapter-link">YAML-справочник</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <!-- ===== HERO ===== -->
+        <section class="hero" id="top">
+            <div class="hero-badge">Адаптированный перевод руководства Anthropic</div>
+            <h1>Полное руководство по&nbsp;созданию Skills для&nbsp;Claude</h1>
+            <p>Как проектировать, тестировать и распространять skills: от первой идеи до публикации. Проверенные паттерны, живые примеры и разбор типичных ошибок.</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item"><strong>33</strong>&nbsp;страницы</div>
+                <div class="hero-meta-item"><strong>5</strong>&nbsp;паттернов</div>
+                <div class="hero-meta-item"><strong>15-30</strong>&nbsp;мин на первый skill</div>
+            </div>
+        </section>
+
+        <!-- ===== INTRO ===== -->
+        <section id="intro">
+            <h3>Введение</h3>
+            <p><strong>Skill</strong> — это набор инструкций в виде обычной папки, который учит Claude решать конкретные задачи. По сути, вы один раз описываете свои предпочтения, процессы и экспертизу, и дальше Claude применяет их в каждом разговоре. Не нужно каждый раз объяснять заново.</p>
+            <p>Skills особенно полезны для повторяющихся задач: собрать фронтенд по макету, провести ресёрч по единому шаблону, оформить документ по стандартам команды, пройти многоэтапный процесс шаг за шагом. Они отлично сочетаются со встроенными возможностями (запуском кода и генерацией документов). А если вы уже работаете с MCP-интеграциями, skills станут «прослойкой знаний» поверх инструментов и превратят сырой доступ к API в отлаженные рабочие процессы.</p>
+
+            <h4>Чему вы научитесь</h4>
+            <ul>
+                <li>Как устроен skill технически и какие требования к структуре</li>
+                <li>Какие паттерны работают для автономных skills и для связки с MCP</li>
+                <li>Какие подходы показали себя лучше всего на практике</li>
+                <li>Как тестировать, дорабатывать и публиковать свои skills</li>
+            </ul>
+
+            <h4>Для кого это</h4>
+            <ul>
+                <li>Разработчики, которым нужно, чтобы Claude стабильно следовал определённому процессу</li>
+                <li>Продвинутые пользователи, которым важна воспроизводимость результатов</li>
+                <li>Команды, которые хотят стандартизировать работу с Claude у себя в организации</li>
+            </ul>
+
+            <div class="info-box tip">
+                <strong>Два пути через руководство.</strong> Делаете автономные skills без MCP? Читайте «Основы», «Планирование» и категории 1-2. Хотите усилить свою MCP-интеграцию? Вам в раздел «Skills + MCP» и категорию 3. Технические требования общие для обоих путей.
+            </div>
+
+            <p>Прочитав руководство, вы сможете собрать свой первый рабочий skill за один присест. С помощью skill-creator на это уйдёт примерно <strong>15-30 минут</strong>.</p>
+        </section>
+
+        <!-- ===== CHAPTER 1 ===== -->
+        <div class="chapter-header" id="ch1">
+            <div class="chapter-number">Глава 1</div>
+            <h2>Основы</h2>
+        </div>
+
+        <section id="what-is-skill">
+            <h3>Что такое skill?</h3>
+            <p>Skill — это обычная папка, внутри которой лежат:</p>
+            <ul>
+                <li><code>SKILL.md</code> (обязательный): главный файл с инструкциями в формате Markdown + YAML frontmatter</li>
+                <li><code>scripts/</code> (опционально): скрипты на Python, Bash и т.д.</li>
+                <li><code>references/</code> (опционально): справочные материалы, которые Claude подгрузит при необходимости</li>
+                <li><code>assets/</code> (опционально): шаблоны, шрифты, иконки и другие ресурсы</li>
+            </ul>
+        </section>
+
+        <section id="design-principles">
+            <h3>Принципы, на которых всё построено</h3>
+
+            <h4>Progressive Disclosure</h4>
+            <p>Skills устроены как матрёшка из трёх уровней:</p>
+            <ul>
+                <li><strong>Первый уровень, YAML frontmatter:</strong> всегда на виду у Claude в системном промпте. Это «визитная карточка» skill: достаточно информации, чтобы понять, когда его подключать, но без лишней нагрузки на контекст.</li>
+                <li><strong>Второй уровень, тело SKILL.md:</strong> подгружается, когда Claude решает, что skill подходит к текущей задаче. Здесь лежат полные инструкции.</li>
+                <li><strong>Третий уровень, вложенные файлы:</strong> дополнительные материалы из папки skill, которые Claude подтянет сам, если понадобятся.</li>
+            </ul>
+            <p>За счёт этого расход токенов минимален, а экспертиза всегда под рукой.</p>
+
+            <h4>Совместимость (Composability)</h4>
+            <p>Claude может загрузить сразу несколько skills. Поэтому ваш skill не должен вести себя так, будто он единственный. Пишите его с расчётом на совместную работу с другими.</p>
+
+            <h4>Портативность (Portability)</h4>
+            <p>Один и тот же skill работает в Claude.ai, Claude Code и через API без каких-либо правок. Единственное условие: среда должна поддерживать зависимости, которые нужны вашему skill.</p>
+        </section>
+
+        <section id="skills-mcp">
+            <h3>Skills + MCP-коннекторы</h3>
+            <div class="info-box tip">
+                Если вы делаете автономные skills без MCP, смело переходите к <a href="#ch2">Планированию</a>. Сюда всегда можно вернуться.
+            </div>
+
+            <h4>Аналогия с кухней</h4>
+            <p><strong>MCP</strong> — это профессиональная кухня: плита, ножи, продукты, всё оборудование.<br>
+            <strong>Skills</strong> — это рецепты: пошаговые инструкции, как из всего этого приготовить что-то стоящее.</p>
+            <p>По отдельности полезно, но вместе получается совсем другой уровень.</p>
+
+            <table>
+                <thead>
+                    <tr><th>MCP</th><th>Skills</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Связывает Claude с вашим сервисом (Notion, Asana, Linear и др.)</td><td>Объясняет Claude, как грамотно работать с этим сервисом</td></tr>
+                    <tr><td>Даёт доступ к данным и вызовам инструментов в реальном времени</td><td>Закрепляет рабочие процессы и лучшие практики</td></tr>
+                    <tr><td>Определяет, что Claude <strong>может</strong> делать</td><td>Определяет, как Claude <strong>должен</strong> это делать</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Без skills</h4>
+            <ul>
+                <li>Пользователь подключил MCP и завис: непонятно, с чего начать</li>
+                <li>В поддержку летят вопросы: «а как мне сделать X через вашу интеграцию?»</li>
+                <li>Каждый новый разговор начинается с чистого листа</li>
+                <li>Результаты пляшут, каждый формулирует запросы по-своему</li>
+            </ul>
+
+            <h4>Со skills</h4>
+            <ul>
+                <li>Готовые сценарии подключаются автоматически, когда нужно</li>
+                <li>Инструменты используются стабильно и предсказуемо</li>
+                <li>Лучшие практики зашиты в каждое взаимодействие</li>
+                <li>Порог входа для новых пользователей резко снижается</li>
+            </ul>
+        </section>
+
+        <!-- ===== CHAPTER 2 ===== -->
+        <div class="chapter-header" id="ch2">
+            <div class="chapter-number">Глава 2</div>
+            <h2>Планирование и дизайн</h2>
+        </div>
+
+        <section id="use-cases">
+            <h3>Начните со сценариев использования</h3>
+            <p>Прежде чем писать код, сформулируйте 2-3 конкретных сценария, которые ваш skill должен закрывать.</p>
+
+            <div class="card card-accent">
+                <h4>Пример хорошо описанного сценария</h4>
+                <p><strong>Сценарий:</strong> Планирование спринта</p>
+                <p><strong>Когда срабатывает:</strong> пользователь пишет «помоги спланировать спринт» или «создай задачи на спринт»</p>
+                <p><strong>Что происходит:</strong></p>
+                <ol>
+                    <li>Забирает текущий статус проекта из Linear (через MCP)</li>
+                    <li>Анализирует скорость и загрузку команды</li>
+                    <li>Предлагает приоритизацию задач</li>
+                    <li>Создаёт задачи в Linear с нужными метками и оценками</li>
+                </ol>
+                <p><strong>Итог:</strong> Полностью спланированный спринт, задачи уже в трекере</p>
+            </div>
+
+            <p>Ответьте себе на четыре вопроса:</p>
+            <ul>
+                <li>Какую задачу хочет решить пользователь?</li>
+                <li>Из каких шагов складывается процесс?</li>
+                <li>Какие инструменты понадобятся: встроенные или через MCP?</li>
+                <li>Какую предметную экспертизу стоит зашить в skill?</li>
+            </ul>
+        </section>
+
+        <section id="categories">
+            <h3>Три типичные категории skills</h3>
+
+            <div class="pattern-card">
+                <h4><span class="pattern-number">1</span>Генерация документов и ресурсов</h4>
+                <p><strong>Для чего:</strong> стабильный, качественный результат: документы, презентации, дизайны, код, приложения.</p>
+                <p><strong>Живой пример:</strong> skill <a href="https://github.com/anthropics/skills/tree/main/skills/frontend-design" target="_blank" rel="noopener"><code>frontend-design</code></a></p>
+                <p><em>«Создаёт выразительные, готовые к продакшену фронтенд-интерфейсы. Подходит для веб-компонентов, лендингов, артефактов и приложений.»</em></p>
+                <p><strong>Характерные приёмы:</strong></p>
+                <ul>
+                    <li>Зашитые стайл-гайды и стандарты бренда</li>
+                    <li>Шаблоны для единообразия результатов</li>
+                    <li>Чеклисты качества перед финальной выдачей</li>
+                    <li>Внешние инструменты не нужны, хватает встроенных возможностей Claude</li>
+                </ul>
+            </div>
+
+            <div class="pattern-card">
+                <h4><span class="pattern-number">2</span>Автоматизация рабочих процессов</h4>
+                <p><strong>Для чего:</strong> многоэтапные процессы, где важна единая методология, в том числе координация между несколькими MCP-серверами.</p>
+                <p><strong>Живой пример:</strong> skill <a href="https://github.com/anthropics/skills/tree/main/skills/skill-creator" target="_blank" rel="noopener"><code>skill-creator</code></a></p>
+                <p><em>«Интерактивный помощник для создания новых skills. Ведёт пользователя через формулировку сценариев, заполнение frontmatter, написание инструкций и проверку.»</em></p>
+                <p><strong>Характерные приёмы:</strong></p>
+                <ul>
+                    <li>Пошаговый процесс с контрольными точками</li>
+                    <li>Готовые шаблоны для типовых ситуаций</li>
+                    <li>Встроенные подсказки по улучшению</li>
+                    <li>Цикл «сделал, проверил, доработал»</li>
+                </ul>
+            </div>
+
+            <div class="pattern-card">
+                <h4><span class="pattern-number">3</span>Прокачка MCP-интеграции</h4>
+                <p><strong>Для чего:</strong> добавить слой экспертизы поверх инструментов, которые даёт MCP-сервер.</p>
+                <p><strong>Живой пример:</strong> skill <a href="https://github.com/getsentry/sentry-for-claude/tree/main/skills" target="_blank" rel="noopener"><code>sentry-code-review</code></a> (от Sentry)</p>
+                <p><em>«Автоматически находит и исправляет баги в Pull Request'ах на GitHub, опираясь на данные мониторинга Sentry через MCP.»</em></p>
+                <p><strong>Характерные приёмы:</strong></p>
+                <ul>
+                    <li>Цепочка из нескольких MCP-вызовов в нужном порядке</li>
+                    <li>Предметная экспертиза, вшитая в логику</li>
+                    <li>Контекст, который иначе пришлось бы задавать руками</li>
+                    <li>Обработка типичных ошибок MCP</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="success-criteria">
+            <h3>Как понять, что skill работает</h3>
+            <p>Ниже перечислены ориентиры, а не жёсткие пороги. Стремитесь к точности, но будьте готовы к тому, что часть оценки будет субъективной.</p>
+
+            <h4>Цифры</h4>
+            <ul>
+                <li><strong>Skill подключается в 90% подходящих запросов</strong><br>Как проверить: прогоните 10-20 тестовых запросов. Посчитайте, в скольких случаях skill загрузился сам, без ручного вызова.</li>
+                <li><strong>Рабочий процесс укладывается в X вызовов инструментов</strong><br>Как проверить: дайте одну и ту же задачу с включённым skill и без. Сравните число вызовов и расход токенов.</li>
+                <li><strong>Ни одного сбойного API-вызова за весь процесс</strong><br>Как проверить: смотрите логи MCP-сервера во время тестовых прогонов.</li>
+            </ul>
+
+            <h4>Ощущения</h4>
+            <ul>
+                <li>Пользователю не приходится подсказывать Claude, что делать дальше</li>
+                <li>Процесс доходит до конца без ручных правок</li>
+                <li>Результаты воспроизводимы от сессии к сессии</li>
+            </ul>
+        </section>
+
+        <section id="tech-requirements">
+            <h3>Технические требования</h3>
+
+            <h4>Структура файлов</h4>
+            <div class="file-tree">
+                <span class="folder">your-skill-name/</span><br>
+                ├── <span class="file">SKILL.md</span> <span class="comment"># Обязательный</span><br>
+                ├── <span class="folder">scripts/</span> <span class="comment"># Опционально - скрипты</span><br>
+                │   ├── <span class="file">process_data.py</span><br>
+                │   └── <span class="file">validate.sh</span><br>
+                ├── <span class="folder">references/</span> <span class="comment"># Опционально - справка</span><br>
+                │   ├── <span class="file">api-guide.md</span><br>
+                │   └── <span class="folder">examples/</span><br>
+                └── <span class="folder">assets/</span> <span class="comment"># Опционально - шаблоны и тп.</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── <span class="file">report-template.md</span>
+            </div>
+
+            <h4>Железные правила</h4>
+
+            <p><strong>Файл SKILL.md:</strong></p>
+            <ul>
+                <li>Имя ровно <code>SKILL.md</code>, регистр важен</li>
+                <li>Никакие вариации не пройдут: ни <code>SKILL.MD</code>, ни <code>skill.md</code></li>
+            </ul>
+
+            <p><strong>Имя папки:</strong></p>
+            <div class="comparison">
+                <div class="card good">
+                    <div class="comparison-label">✅ Правильно</div>
+                    <p><code>notion-project-setup</code><br>
+                    <small>kebab-case, всё строчными, через дефис</small></p>
+                </div>
+                <div class="card bad">
+                    <div class="comparison-label">❌ Неправильно</div>
+                    <p><code>Notion Project Setup</code><br>
+                    <code>notion_project_setup</code><br>
+                    <code>NotionProjectSetup</code></p>
+                </div>
+            </div>
+
+            <p><strong>README.md внутри skill не нужен.</strong> Вся документация лежит в <code>SKILL.md</code> или <code>references/</code>. README понадобится позже, на уровне репозитория, для людей, а не для Claude.</p>
+        </section>
+
+        <section id="writing-skills">
+            <h3>YAML frontmatter: самое важное в skill</h3>
+            <p>Именно по YAML-шапке Claude решает, подключать ваш skill или нет. Здесь нельзя ошибиться.</p>
+
+            <h4>Минимально рабочий вариант</h4>
+<pre><code>---
+name: your-skill-name
+description: Что делает. Подключать, когда пользователь просит [конкретные фразы].
+---</code></pre>
+            <p>Этого достаточно для старта.</p>
+
+            <h4>Обязательные поля</h4>
+            <p><strong>name</strong>:</p>
+            <ul>
+                <li>Только kebab-case (строчные через дефис)</li>
+                <li>Без пробелов и заглавных</li>
+                <li>Должно совпадать с именем папки</li>
+            </ul>
+
+            <p><strong>description</strong>:</p>
+            <ul>
+                <li>Обязательно содержит две вещи: <strong>что skill делает</strong> и <strong>когда его подключать</strong></li>
+                <li>Не больше 1024 символов</li>
+                <li>Никаких XML-тегов (<code>&lt;</code> или <code>&gt;</code>)</li>
+                <li>Перечислите конкретные фразы, которые может сказать пользователь</li>
+                <li>Укажите типы файлов, если это важно</li>
+            </ul>
+
+            <h4>Опциональные поля</h4>
+            <ul>
+                <li><strong>license:</strong> лицензия для открытых skills (MIT, Apache-2.0)</li>
+                <li><strong>compatibility:</strong> требования к окружению (1-500 символов)</li>
+                <li><strong>metadata:</strong> произвольные поля: автор, версия, mcp-server и т.д.</li>
+            </ul>
+
+            <h4>Ограничения безопасности</h4>
+            <p>Во frontmatter запрещены:</p>
+            <ul>
+                <li>XML-угловые скобки (<code>&lt; &gt;</code>)</li>
+                <li>Слова «claude» или «anthropic» в имени skill (зарезервированы)</li>
+            </ul>
+            <p><em>Почему: шапка попадает прямо в системный промпт Claude. Вредоносный контент мог бы подменить инструкции.</em></p>
+
+            <h3>Как писать описание</h3>
+            <p>Формула: <strong>[Что делает] + [Когда подключать] + [Ключевые возможности]</strong></p>
+
+            <div class="comparison">
+                <div class="card good">
+                    <div class="comparison-label">✅ Хорошо — конкретно и с триггерами</div>
+                    <p style="font-size:14px; margin:0;">Разбирает дизайн-файлы Figma и готовит документацию для передачи разработчикам. Подключать, когда пользователь загружает .fig, просит «спеки по дизайну», «документацию компонентов» или «хендофф дизайна».</p>
+                    <p style="font-size:14px; margin:8px 0 0; padding-top:8px; border-top:1px solid var(--color-border);">Управляет проектами в Linear: планирование спринтов, создание задач, трекинг статусов. Подключать, когда пользователь упоминает «спринт», «задачи Linear», «планирование проекта» или просит «создать тикеты».</p>
+                    <p style="font-size:14px; margin:8px 0 0; padding-top:8px; border-top:1px solid var(--color-border);">Полный онбординг клиентов PayFlow: создание аккаунта, настройка оплаты, управление подпиской. Подключать, когда пользователь просит «заонбордить клиента», «настроить подписку» или «создать аккаунт PayFlow».</p>
+                </div>
+                <div class="card bad">
+                    <div class="comparison-label">❌ Плохо</div>
+                    <p style="font-size:14px; margin:0;">Помогает с проектами.</p>
+                    <p style="font-size:14px; margin:4px 0 0;">Создаёт документационные системы.</p>
+                    <p style="font-size:14px; margin:4px 0 0;">Реализует модель сущности Project с иерархическими связями.</p>
+                </div>
+            </div>
+
+            <h3>Как писать инструкции</h3>
+            <p>После YAML-шапки идёт тело skill, обычный Markdown. Вот рекомендуемый каркас:</p>
+
+<pre><code>---
+name: your-skill
+description: [...]
+---
+
+# Название Skill
+
+## Инструкции
+
+### Шаг 1: [Первый шаг]
+Что конкретно нужно сделать.
+
+Пример:
+```bash
+python scripts/fetch_data.py --project-id PROJECT_ID
+```
+Если всё прошло хорошо: [описание результата]
+
+## Примеры
+
+### Пример 1: [типичная ситуация]
+Пользователь: "Создай новую маркетинговую кампанию"
+Действия:
+1. Забрать существующие кампании через MCP
+2. Создать новую с указанными параметрами
+Результат: кампания создана, ссылка для подтверждения отправлена
+
+## Если что-то пошло не так
+
+Ошибка: [текст ошибки]
+Почему: [причина]
+Что делать: [решение]</code></pre>
+
+            <h4>Как писать инструкции, которые работают</h4>
+
+            <div class="comparison stacked">
+                <div class="card good">
+                    <div class="comparison-label">✅ Хорошо: конкретно, с примерами</div>
+<pre><code>Запустите `python scripts/validate.py --input {filename}`
+для проверки формата.
+Если не прошло, типичные причины:
+- Не хватает обязательных полей (допишите в CSV)
+- Даты в неправильном формате (нужен YYYY-MM-DD)</code></pre>
+                </div>
+                <div class="card bad">
+                    <div class="comparison-label">❌ Плохо: размыто, бесполезно</div>
+<pre><code>Проверьте данные перед тем как продолжить.</code></pre>
+                </div>
+            </div>
+
+            <p>Не забывайте про <strong>обработку ошибок</strong> и <strong>ссылки на справочные файлы</strong>. Главное правило: <code>SKILL.md</code> содержит суть, а детали выносите в <code>references/</code>.</p>
+        </section>
+
+        <!-- ===== CHAPTER 3 ===== -->
+        <div class="chapter-header" id="ch3">
+            <div class="chapter-number">Глава 3</div>
+            <h2>Тестирование и итерации</h2>
+        </div>
+
+        <section id="testing-approach">
+            <h3>Как тестировать</h3>
+            <p>Глубина тестирования зависит от задачи:</p>
+            <ul>
+                <li><strong>Вручную в Claude.ai:</strong> просто задаёте вопросы и смотрите, что происходит. Быстро, без настройки.</li>
+                <li><strong>Скриптами в Claude Code:</strong> автоматизированные тест-кейсы для повторяемой проверки после каждого изменения.</li>
+                <li><strong>Программно через Skills API:</strong> полноценные eval-наборы, прогоняемые систематически.</li>
+            </ul>
+
+            <div class="info-box tip">
+                <strong>Совет:</strong> сначала доведите до ума одну сложную задачу, потом масштабируйте. Лучшие авторы skills сперва добиваются успеха на одном сценарии, а уже потом извлекают из него паттерн.
+            </div>
+
+            <h4>1. Проверка триггеров</h4>
+            <p><strong>Задача:</strong> убедиться, что skill подключается когда надо и молчит когда не надо.</p>
+
+            <div class="comparison">
+                <div class="card good">
+                    <div class="comparison-label">✅ Должен подключиться</div>
+                    <ul style="font-size:14px;">
+                        <li>«Помоги настроить воркспейс ProjectHub»</li>
+                        <li>«Нужно создать проект в ProjectHub»</li>
+                        <li>«Заведи проект ProjectHub для планирования Q4»</li>
+                    </ul>
+                </div>
+                <div class="card bad">
+                    <div class="comparison-label">❌ Не должен подключаться</div>
+                    <ul style="font-size:14px;">
+                        <li>«Какая погода в Москве?»</li>
+                        <li>«Помоги написать код на Python»</li>
+                        <li>«Сделай таблицу»</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4>2. Функциональные тесты</h4>
+            <p><strong>Задача:</strong> убедиться, что на выходе корректный результат.</p>
+<pre><code>Тест: Создать проект с 5 задачами
+Дано: название проекта "Q4 Planning", 5 описаний задач
+Когда: skill отрабатывает весь процесс
+Тогда:
+  - Проект появился в ProjectHub
+  - 5 задач созданы с правильными полями
+  - Все задачи привязаны к проекту
+  - Ни одной ошибки API</code></pre>
+
+            <h4>3. Сравнение «до и после»</h4>
+            <p><strong>Задача:</strong> показать, что со skill реально лучше, чем без него.</p>
+            <div class="comparison">
+                <div class="card bad">
+                    <div class="comparison-label">❌ Без skill</div>
+                    <ul style="font-size:14px;">
+                        <li>Каждый раз объясняешь всё заново</li>
+                        <li>15 сообщений туда-обратно</li>
+                        <li>3 сбойных вызова API</li>
+                        <li>12 000 токенов</li>
+                    </ul>
+                </div>
+                <div class="card good">
+                    <div class="comparison-label">✅ Со skill</div>
+                    <ul style="font-size:14px;">
+                        <li>Всё работает на автомате</li>
+                        <li>Максимум 2 уточняющих вопроса</li>
+                        <li>0 сбоев API</li>
+                        <li>6 000 токенов</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="skill-creator">
+            <h3>Skill-creator — ваш помощник</h3>
+            <p><code>skill-creator</code> встроен в Claude.ai и доступен в Claude Code. Если у вас есть MCP-сервер и понимание 2-3 основных сценариев, первый рабочий skill можно собрать и обкатать за <strong>15-30 минут</strong>.</p>
+            <ul>
+                <li><strong>Создание:</strong> генерирует skill из описания на обычном языке, выдаёт готовый SKILL.md с правильной шапкой</li>
+                <li><strong>Ревью:</strong> находит слабые места: размытые описания, недостающие триггеры, структурные проблемы</li>
+                <li><strong>Доработка:</strong> покажите ему примеры граничных случаев, и он подскажет, как улучшить обработку</li>
+            </ul>
+<pre><code>"Используй skill-creator, мне нужен skill для [ваш сценарий]"</code></pre>
+            <div class="info-box note">
+                <strong>Важно:</strong> skill-creator помогает проектировать и дорабатывать skills, но не запускает автоматические тест-сьюты и не выдаёт количественных результатов оценки.
+            </div>
+        </section>
+
+        <section id="iteration">
+            <h3>Доработка по ходу дела</h3>
+            <p>Skill не монолит, а живой документ. Вот на что обращать внимание:</p>
+
+            <h4>Skill молчит, когда должен работать</h4>
+            <ul>
+                <li>Не подключается на подходящие запросы</li>
+                <li>Пользователи вынуждены включать его руками</li>
+            </ul>
+            <p><strong>Что делать:</strong> обогатите описание: больше деталей, ключевых слов, технических терминов.</p>
+
+            <h4>Skill лезет куда не просят</h4>
+            <ul>
+                <li>Подключается на посторонние запросы</li>
+                <li>Пользователи раздражённо его отключают</li>
+            </ul>
+            <p><strong>Что делать:</strong> добавьте «антитриггеры» (чётко скажите, когда НЕ использовать), сузьте формулировки.</p>
+
+            <h4>Skill работает криво</h4>
+            <ul>
+                <li>Результаты «плавают» от запуска к запуску</li>
+                <li>API-вызовы падают</li>
+            </ul>
+            <p><strong>Что делать:</strong> конкретизируйте инструкции, добавьте обработку ошибок.</p>
+        </section>
+
+        <!-- ===== CHAPTER 4 ===== -->
+        <div class="chapter-header" id="ch4">
+            <div class="chapter-number">Глава 4</div>
+            <h2>Дистрибуция и распространение</h2>
+        </div>
+
+        <section id="distribution-model">
+            <p>Skills делают вашу MCP-интеграцию полноценной. Когда пользователи сравнивают коннекторы, те, что идут со skills, быстрее приносят пользу — это ваше преимущество перед MCP-only альтернативами.</p>
+
+            <h3>Как распространять</h3>
+            <h4>Текущая модель (январь 2026)</h4>
+
+            <h4>Для обычных пользователей</h4>
+            <ol>
+                <li>Скачать папку skill</li>
+                <li>Запаковать в .zip (если нужно)</li>
+                <li>Загрузить в Claude.ai: Settings &gt; Capabilities &gt; Skills</li>
+                <li>Либо положить в папку skills Claude Code</li>
+            </ol>
+
+            <h4>Для организаций</h4>
+            <ul>
+                <li>Админы могут раскатать skills на весь workspace разом (доступно с 18 декабря 2025)</li>
+                <li>Обновления приезжают автоматически</li>
+                <li>Управление из одного места</li>
+            </ul>
+
+            <h4>Открытый стандарт</h4>
+            <p>Anthropic выпустила <a href="https://agentskills.io/home" target="_blank" rel="noopener"><strong>Agent Skills</strong></a> как открытый стандарт. Идея та же, что и с MCP: один skill должен работать везде: и в Claude, и на других AI-платформах, без переделок.</p>
+        </section>
+
+        <section id="skills-api">
+            <h3>Skills через API</h3>
+            <p>Если вы строите приложения, агентов или автоматические пайплайны, API даёт полный контроль над skills:</p>
+
+            <ul>
+                <li>Эндпоинт <code>/v1/skills</code> для управления</li>
+                <li>Подключение skills к Messages API через параметр <code>container.skills</code></li>
+                <li>Версионирование через Claude Console</li>
+                <li>Интеграция с Claude Agent SDK для кастомных агентов</li>
+            </ul>
+
+            <table>
+                <thead>
+                    <tr><th>Сценарий</th><th>Где лучше</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Живая работа пользователей со skills</td><td>Claude.ai / Claude Code</td></tr>
+                    <tr><td>Ручное тестирование и обкатка</td><td>Claude.ai / Claude Code</td></tr>
+                    <tr><td>Программное использование</td><td>API</td></tr>
+                    <tr><td>Продакшен на масштабе</td><td>API</td></tr>
+                    <tr><td>Автопайплайны и агентные системы</td><td>API</td></tr>
+                </tbody>
+            </table>
+
+            <div class="info-box note">
+                Для работы skills через API нужен Code Execution Tool (бета), он обеспечивает безопасную среду выполнения.
+            </div>
+
+            <p><strong>Подробности в документации:</strong></p>
+            <ul>
+                <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/quickstart" target="_blank" rel="noopener">Skills API Quickstart</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills" target="_blank" rel="noopener">Create Custom Skills</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-agent-sdk" target="_blank" rel="noopener">Skills in the Agent SDK</a></li>
+            </ul>
+        </section>
+
+        <section id="positioning">
+            <h3>Как подать свой skill</h3>
+            <p>Оптимальный путь: публичный GitHub-репозиторий с внятным README, примерами и скриншотами. Плюс раздел в документации вашего MCP-сервера со ссылкой на skill и объяснением, зачем использовать оба вместе.</p>
+
+            <div class="comparison">
+                <div class="card good">
+                    <div class="comparison-label">✅ Говорите про пользу</div>
+                    <p style="font-size:14px; margin:0;">«Skill ProjectHub разворачивает полный воркспейс за секунды: страницы, базы, шаблоны. Вместо 30 минут ручной возни.»</p>
+                </div>
+                <div class="card bad">
+                    <div class="comparison-label">❌ Говорите про технологию</div>
+                    <p style="font-size:14px; margin:0;">«Skill ProjectHub — это папка с YAML frontmatter и Markdown-инструкциями, которая вызывает инструменты нашего MCP-сервера.»</p>
+                </div>
+            </div>
+
+            <h4>Шаблон инструкции по установке</h4>
+<pre><code>## Установка skill [Название сервиса]
+
+1. Скачайте skill:
+   - Клонируйте репо: `git clone https://github.com/yourcompany/skills`
+   - Или скачайте ZIP из Releases
+
+2. Установите в Claude:
+   - Откройте Claude.ai &gt; Settings &gt; Skills
+   - Нажмите «Upload skill»
+   - Выберите папку со skill (в .zip)
+
+3. Активируйте:
+   - Включите skill [Название сервиса]
+   - Убедитесь, что MCP-сервер подключён
+
+4. Проверьте:
+   - Спросите Claude: «Создай новый проект в [Сервис]»</code></pre>
+
+            <p><strong>Подчеркните ценность связки MCP + Skills:</strong></p>
+            <p><em>«Наш MCP-сервер открывает Claude доступ к вашим проектам в Linear. А наши skills учат его вашему процессу планирования спринтов. Вместе это AI-управление проектами из коробки.»</em></p>
+        </section>
+
+        <!-- ===== CHAPTER 5 ===== -->
+        <div class="chapter-header" id="ch5">
+            <div class="chapter-number">Глава 5</div>
+            <h2>Паттерны и устранение неполадок</h2>
+        </div>
+
+        <p>Эти паттерны выросли из опыта первых пользователей и внутренних команд Anthropic. Это не догмы, а проверенные подходы. Берите то, что подходит.</p>
+
+        <div class="info-box tip">
+            <strong>Два угла зрения.</strong> <em>От задачи:</em> «Мне нужно развернуть воркспейс», и skill сам выстраивает цепочку MCP-вызовов. <em>От инструмента:</em> «У меня подключён Notion MCP», и skill подсказывает Claude, как работать с ним оптимально.
+        </div>
+
+        <section id="pattern1">
+            <div class="pattern-card">
+                <h4><span class="pattern-number">1</span>Последовательный процесс</h4>
+                <p><strong>Подходит, когда:</strong> нужно пройти несколько шагов строго по порядку, где каждый зависит от предыдущего.</p>
+<pre><code>## Процесс: онбординг нового клиента
+
+### Шаг 1: Создать аккаунт
+MCP-вызов: `create_customer`
+Параметры: name, email, company
+
+### Шаг 2: Подключить оплату
+MCP-вызов: `setup_payment_method`
+Ждём: подтверждения платёжного метода
+
+### Шаг 3: Оформить подписку
+MCP-вызов: `create_subscription`
+Параметры: plan_id, customer_id (из шага 1)
+
+### Шаг 4: Отправить приветственное письмо
+MCP-вызов: `send_email`
+Шаблон: welcome_email_template</code></pre>
+                <p><strong>На что обратить внимание:</strong> чёткий порядок шагов, явные зависимости между ними, проверка на каждом этапе, инструкция по откату при сбое.</p>
+            </div>
+        </section>
+
+        <section id="pattern2">
+            <div class="pattern-card">
+                <h4><span class="pattern-number">2</span>Координация нескольких MCP</h4>
+                <p><strong>Подходит, когда:</strong> процесс затрагивает несколько разных сервисов.</p>
+<pre><code>## Передача дизайна в разработку
+
+### Фаза 1: Экспорт дизайна (Figma MCP)
+1. Выгрузить ассеты из Figma
+2. Собрать спецификации
+3. Сформировать манифест ассетов
+
+### Фаза 2: Сохранение (Drive MCP)
+1. Создать проектную папку в Drive
+2. Залить все ассеты
+3. Получить ссылки для расшаривания
+
+### Фаза 3: Постановка задач (Linear MCP)
+1. Завести задачи на разработку
+2. Прикрепить ссылки на ассеты
+3. Назначить на инженерную команду
+
+### Фаза 4: Оповещение (Slack MCP)
+1. Кинуть сводку в #engineering
+2. Приложить ссылки и номера задач</code></pre>
+                <p><strong>На что обратить внимание:</strong> чёткое разделение по фазам, передача данных между MCP-серверами, проверка перед переходом на следующую фазу, единая обработка ошибок.</p>
+            </div>
+        </section>
+
+        <section id="pattern3">
+            <div class="pattern-card">
+                <h4><span class="pattern-number">3</span>Итеративная доработка</h4>
+                <p><strong>Подходит, когда:</strong> результат становится лучше с каждым проходом.</p>
+<pre><code>## Подготовка отчёта в несколько проходов
+
+### Черновик
+1. Забрать данные через MCP
+2. Сгенерировать первую версию
+3. Сохранить во временный файл
+
+### Проверка
+1. Прогнать скрипт валидации: `scripts/check_report.py`
+2. Собрать список проблем: пропущенные разделы,
+   «поехавшее» форматирование, ошибки в данных
+
+### Цикл доработки
+1. Исправить каждую найденную проблему
+2. Перегенерировать затронутые разделы
+3. Снова прогнать валидацию
+4. Повторять, пока качество не дотянет до порога
+
+### Финализация
+1. Наложить итоговое форматирование
+2. Добавить краткую выжимку
+3. Сохранить финальную версию</code></pre>
+                <p><strong>На что обратить внимание:</strong> чёткие критерии «хорошо/плохо», скрипты для автоматической проверки, понимание момента, когда пора остановиться.</p>
+            </div>
+        </section>
+
+        <section id="pattern4">
+            <div class="pattern-card">
+                <h4><span class="pattern-number">4</span>Выбор инструмента по ситуации</h4>
+                <p><strong>Подходит, когда:</strong> цель одна, но способ её достижения зависит от контекста.</p>
+<pre><code>## Умное сохранение файлов
+
+### Дерево решений
+1. Определить тип и размер файла
+2. Выбрать хранилище:
+   - Большие файлы (>10 МБ) → облачное хранилище MCP
+   - Совместные документы → Notion/Docs MCP
+   - Исходный код → GitHub MCP
+   - Временные файлы → локальная файловая система
+
+### Действие
+По результатам:
+- Вызвать нужный MCP-инструмент
+- Проставить метаданные по правилам сервиса
+- Вернуть ссылку доступа
+
+### Пояснение
+Рассказать пользователю, почему выбрано именно это хранилище</code></pre>
+                <p><strong>На что обратить внимание:</strong> однозначные критерии выбора, запасной вариант на каждый случай, прозрачность: пользователь понимает, что произошло и почему.</p>
+            </div>
+        </section>
+
+        <section id="pattern5">
+            <div class="pattern-card">
+                <h4><span class="pattern-number">5</span>Встроенная предметная экспертиза</h4>
+                <p><strong>Подходит, когда:</strong> skill несёт в себе знания, которых нет ни в инструментах, ни у пользователя.</p>
+<pre><code>## Обработка платежей с проверкой комплаенса
+
+### До обработки: проверка
+1. Забрать детали транзакции через MCP
+2. Прогнать через правила комплаенса:
+   - Санкционные списки
+   - Допустимые юрисдикции
+   - Уровень риска
+3. Зафиксировать решение
+
+### Обработка
+ЕСЛИ проверка пройдена:
+  - Провести платёж через MCP
+  - Выполнить антифрод-проверки
+  - Завершить транзакцию
+ИНАЧЕ:
+  - Пометить для ручного ревью
+  - Создать кейс в системе комплаенса
+
+### Аудиторский след
+- Записать все проверки
+- Сохранить принятые решения
+- Сформировать отчёт для аудита</code></pre>
+                <p><strong>На что обратить внимание:</strong> экспертиза зашита прямо в логику, проверка всегда идёт до действия, каждый шаг документируется, ответственность прозрачна.</p>
+            </div>
+        </section>
+
+        <section id="troubleshooting">
+            <h3>Типичные проблемы и решения</h3>
+
+            <h4>Skill не загружается</h4>
+            <div class="card">
+                <p><strong>Ошибка:</strong> <code>Could not find SKILL.md in uploaded folder</code></p>
+                <p><strong>Почему:</strong> файл назван не <code>SKILL.md</code>, а как-то иначе</p>
+                <p><strong>Что делать:</strong> переименуйте ровно в <code>SKILL.md</code>. Регистр важен! Проверьте через <code>ls -la</code>.</p>
+            </div>
+
+            <div class="card">
+                <p><strong>Ошибка:</strong> <code>Invalid frontmatter</code></p>
+                <p><strong>Почему:</strong> косяк в YAML-разметке</p>
+<pre><code># Нет разделителей, не сработает
+name: my-skill
+description: Does things
+
+# Незакрытые кавычки, не сработает
+name: my-skill
+description: "Does things
+
+# Вот так правильно
+---
+name: my-skill
+description: Does things
+---</code></pre>
+            </div>
+
+            <div class="card">
+                <p><strong>Ошибка:</strong> <code>Invalid skill name</code></p>
+                <p><strong>Почему:</strong> в имени пробелы или заглавные буквы</p>
+<pre><code># Неправильно
+name: My Cool Skill
+
+# Правильно
+name: my-cool-skill</code></pre>
+            </div>
+
+            <h4>Skill не подключается</h4>
+            <div class="card">
+                <p><strong>Пройдитесь по списку:</strong></p>
+                <ul>
+                    <li>Описание не слишком ли абстрактное? «Помогает с проектами». Claude такое не зацепит</li>
+                    <li>Есть ли фразы, которые люди реально произносят?</li>
+                    <li>Упомянуты ли типы файлов, если это важно?</li>
+                </ul>
+                <p><strong>Лайфхак:</strong> спросите Claude напрямую: «Когда бы ты подключил skill [имя]?» Он процитирует описание, и сразу станет видно, чего не хватает.</p>
+            </div>
+
+            <h4>Skill подключается к чему попало</h4>
+            <div class="card">
+                <p><strong>Три способа починить:</strong></p>
+                <ol>
+                    <li><strong>Антитриггеры:</strong> «НЕ подключать для простого просмотра данных (для этого есть data-viz)»</li>
+                    <li><strong>Уточнение:</strong> вместо «Обрабатывает документы», напишите «Разбирает юридические PDF для ревью контрактов»</li>
+                    <li><strong>Границы:</strong> «Платежи PayFlow для e-commerce. Только для онлайн-платежей, не для общих финансовых вопросов.»</li>
+                </ol>
+            </div>
+
+            <h4>MCP-вызовы падают</h4>
+            <div class="card">
+                <p><strong>Симптом:</strong> skill загружается, но вызовы MCP не проходят</p>
+                <p><strong>Пройдитесь по списку:</strong></p>
+                <ol>
+                    <li><strong>MCP-сервер подключён?</strong><br>Claude.ai: Settings &gt; Extensions &gt; [Ваш сервис] — должно быть «Connected»</li>
+                    <li><strong>Аутентификация в порядке?</strong><br>API-ключи не протухли, нужные scopes выданы, OAuth-токены обновлены</li>
+                    <li><strong>MCP работает без skill?</strong><br>Спросите Claude напрямую: «Используй [Сервис] MCP, покажи мои проекты». Если и так не работает — проблема в MCP, а не в skill</li>
+                    <li><strong>Имена инструментов совпадают?</strong><br>Проверьте, что skill ссылается на те же имена, что в документации MCP-сервера. Имена инструментов регистрозависимы</li>
+                </ol>
+            </div>
+
+            <h4>Claude игнорирует инструкции</h4>
+            <div class="card">
+                <p><strong>Обычные причины:</strong></p>
+                <ol>
+                    <li><strong>Простыня текста:</strong> пишите кратко, используйте списки, выносите подробности в <code>references/</code></li>
+                    <li><strong>Главное закопано в середине:</strong> критическое всегда наверх, заголовки «Important» или «Critical» помогают</li>
+                    <li><strong>Размытые формулировки:</strong> не «проверьте корректность», а <code>CRITICAL: до вызова create_project убедитесь: имя не пустое, назначен хотя бы один участник, дата начала не в прошлом</code></li>
+                    <li><strong>Модель «ленится»:</strong> помогает фраза: «Не торопись, пройди каждый шаг тщательно. Качество важнее скорости.» Работает лучше в промпте пользователя, чем в SKILL.md</li>
+                </ol>
+
+                <div class="info-box tip" style="margin-top:16px;">
+                    <strong>Продвинутый приём:</strong> если валидация критична, напишите скрипт, а не текстовую инструкцию. Код работает детерминированно, человеческий язык нет.
+                </div>
+            </div>
+
+            <h4>Skill тормозит или деградирует</h4>
+            <div class="card">
+                <p><strong>Что делать:</strong></p>
+                <ol>
+                    <li>Ужмите <code>SKILL.md</code> до 5 000 слов максимум, всё остальное в <code>references/</code></li>
+                    <li>Проверьте, не включено ли у вас 20-50 skills одновременно, это перегружает контекст</li>
+                    <li>Группируйте связанные skills в «пакеты» и включайте по ситуации</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ===== CHAPTER 6 ===== -->
+        <div class="chapter-header" id="ch6">
+            <div class="chapter-number">Глава 6</div>
+            <h2>Ресурсы и справочники</h2>
+        </div>
+
+        <section>
+            <h4>Документация Anthropic</h4>
+            <ul>
+                <li><a href="https://docs.anthropic.com/en/docs/claude-code/skills" target="_blank" rel="noopener">Skills Documentation</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/quickstart" target="_blank" rel="noopener">API Quickstart</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills" target="_blank" rel="noopener">API Reference</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/mcp" target="_blank" rel="noopener">MCP Documentation</a></li>
+            </ul>
+
+            <h4>Статьи в блоге</h4>
+            <ul>
+                <li><a href="https://www.anthropic.com/news/skills" target="_blank" rel="noopener">Introducing Agent Skills</a></li>
+                <li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Engineering Blog: Equipping Agents for the Real World</a></li>
+                <li><a href="https://claude.com/blog/skills-explained" target="_blank" rel="noopener">Skills Explained</a></li>
+                <li><a href="https://claude.com/blog/how-to-create-skills-key-steps-limitations-and-examples" target="_blank" rel="noopener">How to Create Skills for Claude</a></li>
+                <li><a href="https://claude.com/blog/improving-frontend-design-through-skills" target="_blank" rel="noopener">Improving Frontend Design through Skills</a></li>
+            </ul>
+
+            <h4>Готовые примеры</h4>
+            <ul>
+                <li><a href="https://github.com/anthropics/skills" target="_blank" rel="noopener"><strong>GitHub: anthropics/skills</strong></a> — коллекция skills от Anthropic, можно форкнуть и адаптировать</li>
+            </ul>
+
+            <h4>Инструменты</h4>
+            <ul>
+                <li><strong>skill-creator:</strong> встроен в Claude.ai и доступен в Claude Code. Генерирует skills из описания, проверяет структуру, подсказывает улучшения.</li>
+            </ul>
+
+            <h4>Куда обращаться</h4>
+            <ul>
+                <li>Вопросы: <a href="https://discord.com/invite/6PPFFzqPDZ" target="_blank" rel="noopener">Claude Developers Discord</a></li>
+                <li>Баги: <a href="https://github.com/anthropics/skills/issues" target="_blank" rel="noopener">anthropics/skills/issues</a> на GitHub</li>
+            </ul>
+        </section>
+
+        <!-- ===== CHECKLIST ===== -->
+        <div class="chapter-header" id="checklist">
+            <div class="chapter-number">Приложение А</div>
+            <h2>Быстрый чеклист</h2>
+        </div>
+
+        <section>
+            <h4>До старта</h4>
+            <ul class="checklist">
+                <li>Сформулированы 2-3 конкретных сценария</li>
+                <li>Понятно, какие инструменты нужны (встроенные или MCP)</li>
+                <li>Просмотрены примеры существующих skills</li>
+                <li>Продумана структура папок</li>
+            </ul>
+
+            <h4>В процессе</h4>
+            <ul class="checklist">
+                <li>Папка в kebab-case</li>
+                <li>Файл называется ровно <code>SKILL.md</code></li>
+                <li>YAML frontmatter обрамлена <code>---</code></li>
+                <li>name: строчные, через дефис, без пробелов</li>
+                <li>description отвечает на «что делает» и «когда подключать»</li>
+                <li>Нигде нет XML-тегов</li>
+                <li>Инструкции конкретные, с примерами</li>
+                <li>Описана обработка ошибок</li>
+                <li>Есть примеры использования</li>
+                <li>Ссылки на справочные файлы расставлены</li>
+            </ul>
+
+            <h4>Перед загрузкой</h4>
+            <ul class="checklist">
+                <li>Подключается на очевидные запросы</li>
+                <li>Подключается на перефразированные запросы</li>
+                <li>Не подключается на посторонние темы</li>
+                <li>Функциональные тесты проходят</li>
+                <li>Интеграция с инструментами работает (если есть)</li>
+                <li>Папка запакована в .zip</li>
+            </ul>
+
+            <h4>После загрузки</h4>
+            <ul class="checklist">
+                <li>Обкатано в живых разговорах</li>
+                <li>Отслеживаются ложные срабатывания и пропуски</li>
+                <li>Собирается обратная связь</li>
+                <li>Описание и инструкции дорабатываются</li>
+                <li>Версия в метаданных обновлена</li>
+            </ul>
+        </section>
+
+        <!-- ===== YAML REF ===== -->
+        <div class="chapter-header" id="yaml-ref">
+            <div class="chapter-number">Приложение Б</div>
+            <h2>YAML frontmatter справочник</h2>
+        </div>
+
+        <section>
+            <h4>Обязательные поля</h4>
+<pre><code>---
+name: skill-name-in-kebab-case
+description: Что делает и когда подключать. Перечислите фразы-триггеры.
+---</code></pre>
+
+            <h4>Полный набор полей</h4>
+<pre><code>name: skill-name
+description: [обязательное описание]
+license: MIT                    # Лицензия для open-source
+allowed-tools: "Bash(python:*) Bash(npm:*) WebFetch"  # Ограничение инструментов
+metadata:                       # Произвольные поля
+  author: Company Name
+  version: 1.0.0
+  mcp-server: server-name
+  category: productivity
+  tags: [project-management, automation]
+  documentation: https://example.com/docs
+  support: support@example.com</code></pre>
+
+            <h4>Безопасность</h4>
+            <table>
+                <thead>
+                    <tr><th>Можно</th><th>Нельзя</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Любые стандартные YAML-типы (строки, числа, списки, объекты)</td><td>XML-скобки (<code>&lt; &gt;</code>)</td></tr>
+                    <tr><td>Произвольные поля в metadata</td><td>Исполняемый код в YAML</td></tr>
+                    <tr><td>Описания до 1024 символов</td><td>Слова «claude» или «anthropic» в имени</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ===== APPENDIX C ===== -->
+        <div class="chapter-header">
+            <div class="chapter-number">Приложение В</div>
+            <h2>Готовые примеры</h2>
+        </div>
+
+        <section>
+            <p>Полноценные, проверенные в бою skills, где можно подсмотреть все паттерны из руководства:</p>
+            <ul>
+                <li><strong>Document Skills</strong> — генерация PDF, DOCX, PPTX, XLSX</li>
+                <li><strong>Example Skills</strong> — разные паттерны рабочих процессов</li>
+                <li><strong>Partner Skills Directory</strong> : skills от партнёров: Asana, Atlassian, Canva, Figma, Sentry, Zapier и др.</li>
+            </ul>
+            <p>Репозитории актуальны. Форкайте, адаптируйте под себя, используйте как отправную точку.</p>
+        </section>
+
+    </main>
+</div>
+
+<footer class="site-footer">
+    <p>Адаптированный перевод руководства <a href="https://www.anthropic.com" target="_blank" rel="noopener">Anthropic</a> «The Complete Guide to Building Skills for Claude»</p>
+    <p style="margin-top: 8px;">Оригинал: <a href="https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf" target="_blank" rel="noopener">PDF на английском</a></p>
+</footer>
+
+<button class="back-to-top" onclick="window.scrollTo({top:0})" aria-label="Наверх"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16"><path fill="#fff" fill-rule="evenodd" d="M3.293 16.707a1 1 0 0 0 1.414 0L12 9.414l7.293 7.293a1 1 0 0 0 1.414-1.414l-8-8a1 1 0 0 0-1.414 0l-8 8a1 1 0 0 0 0 1.414Z" clip-rule="evenodd"/></svg></button>
+
+<script>
+// Theme toggle
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+}
+
+// Load saved theme
+(function() {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+})();
+
+// Mobile sidebar
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-overlay').classList.toggle('open');
+}
+
+// Close sidebar on link click (mobile)
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+    a.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.querySelector('.sidebar-overlay').classList.remove('open');
+    });
+});
+
+// Back to top button
+window.addEventListener('scroll', () => {
+    const btn = document.querySelector('.back-to-top');
+    btn.classList.toggle('visible', window.scrollY > 600);
+});
+
+// Active sidebar link on scroll
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+            const link = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+            if (link) link.classList.add('active');
+        }
+    });
+}, { rootMargin: '-80px 0px -60% 0px' });
+
+document.querySelectorAll('section[id], div[id]').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
